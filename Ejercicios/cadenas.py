@@ -5,4 +5,7 @@ print(name.title())
 
 user = (input("Enter your user name: "))
 letter = len(user)
-print(f"{user} have {letter} letter in its word")
+print(f"{user} have {letter} letters")
+
+
+
