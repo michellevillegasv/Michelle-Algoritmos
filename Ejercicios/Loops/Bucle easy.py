@@ -6,10 +6,11 @@
 #for i in range(1, number+1, 2):
 #    print(f"The odd numbers until {number} are: "+ str(i))
 #
-# number = int(input("Enter a positive integer number:"))
-#while number > 0: 
- #   number-=1
-  #  print(number, end= ",")
+number = int(input("Enter a positive integer number:"))
+print(number, end= ",")
+while number > 0: 
+    number-=1
+    print(number, end= ",")
     
 #NUMERO COMPUESTO 
 number = int(input("Enter a number:"))
