@@ -1,5 +1,30 @@
-number = (input("Enter a number: "))
-if number[0] == number[1]:
-    print(f" The number {number} is a repunit number")
+while True: 
+    suma=0
+    cuadrado = False
+    repunit = False
+    number = (input("Enter a number: "))
+    if number.isalpha():
+        print("Not valid")
+    elif number.isnumeric():
+        number2= number[::-1]
+        for digits in number: 
+            digits=int(digits)
+            suma+=digits
+        for j in range(1,suma):
+            if j**2 ==suma:
+                cuadrado=True
+                break
+        if number2==number:
+            repunit = True
+            break
+        elif number2!=number: 
+            repunit = False
+            break
+if repunit == True and cuadrado != True: 
+    print(f"{number} is a repunit number but the sum of its digits is not a square number")
+elif repunit != True and cuadrado == True:
+    print(f"{number} is not a repunit number but the sum of its digits is a square number")
+elif repunit == True and cuadrado == True: 
+    print(f"{number} is a repunit number and the sum of its digits is a square number")
 else: 
-    print(f" The number {number} is not a repunit number")
+    print(f"{number} is not a repunit number and the sum of its digits is not a square number")

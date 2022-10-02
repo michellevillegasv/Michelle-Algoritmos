@@ -6,9 +6,7 @@ key1_infraction = "name"
 key2_infraction = "last name"
 key3_infraction = "ID"
 key4_infraction = "Infraction's type"
-key5_officers ="name"
-key6_officers ="last name"
-key7_officers ="ci"
+
 
 
 infraction = {
@@ -35,29 +33,29 @@ while True:
                 last_name = input("- Enter the infractor's last name: ")
                 id = input("- Enter the infractor's ID: ")
                 type_infraction = input("-Enter the type of the infraction: ")
-                officer = input("REGISTER THE OFFICER \n- Officer's name: ")
-                lastname_officer = input("-Officer's last name: ")
-                id_officer = input("-Officer's ID: ")
+                for key_officers, value_officers in officers.items():
+                    print(f"\n- Officer {key_officers}: {value_officers}")
+                select = input("Select the officer: ")
+                if select.isnumeric():
+                    select = int(select)
+                    if select == "1":
+                        select = "Luis Bello"
+                    elif select =="2":
+                        select = "Jose Quevedo"
+                    elif select =="3":
+                        select= "Antonio Guerra"
 
-                new_infractor = {}
-                new_infractor[key1_infraction] =name
-                new_infractor[key2_infraction] =last_name
-                new_infractor[key3_infraction] =id
-                new_infractor[key4_infraction] =type_infraction
-
-                new_officer = {}
-                new_officer[key5_officers]=officer
-                new_officer[key6_officers]=lastname_officer
-                new_officer[key7_officers]=id_officer
+                db[key1_infraction] =name
+                db[key2_infraction] =last_name
+                db[key3_infraction] =id
+                db[key4_infraction] =type_infraction
 
                 for infractions in range(len(infraction)):
                     count_infractions +=1
                     key_infractions = count_infractions+1
-                infraction[key_infractions]=new_infractor
-                for officers_for in range(len(officers)): 
-                    count_officers+=1
-                    key_officers = count_officers+1
-                officers[key_officers]=new_officer
+                infraction[key_infractions]=db
+                print(f"Officer {select} report the infraction {key_infractions}: {db}")
+        
                 exit =input("Do you want to enter another infraction? (Enter 1 or 2) \n1- Yes \n2- No \n->")
                 if exit == "1":
                     continue
@@ -67,6 +65,8 @@ while True:
                     print("Not valid")
         
         elif menu == "3":
+            for keys, values in infraction.items():
+                    print(f"Infraction {keys}: {values}")
             while True:
                 validate_erase = True
                 erase = list(infraction.keys())
