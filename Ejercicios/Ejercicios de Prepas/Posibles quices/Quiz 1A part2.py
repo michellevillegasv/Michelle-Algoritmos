@@ -2,6 +2,7 @@ while True:
     suma=0
     cuadrado = False
     repunit = False
+    numx = int()
     number = (input("Enter a number: "))
     if number.isalpha():
         print("Not valid")
@@ -10,10 +11,10 @@ while True:
         for digits in number: 
             digits=int(digits)
             suma+=digits
-        for j in range(1,suma):
-            if j**2 ==suma:
-                cuadrado=True
-                break
+            for j in range(digits):
+                if suma**(1/2) == j:
+                    cuadrado=True
+                    break
         if number2==number:
             repunit = True
             break

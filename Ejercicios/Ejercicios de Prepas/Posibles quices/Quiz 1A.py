@@ -1,4 +1,6 @@
 
+
+
 count_infractions = 0
 count_officers = 0
 count_erase =0
@@ -33,29 +35,38 @@ while True:
                 last_name = input("- Enter the infractor's last name: ")
                 id = input("- Enter the infractor's ID: ")
                 type_infraction = input("-Enter the type of the infraction: ")
-                for key_officers, value_officers in officers.items():
-                    print(f"\n- Officer {key_officers}: {value_officers}")
-                select = input("Select the officer: ")
-                if select.isnumeric():
-                    select = int(select)
-                    if select == "1":
-                        select = "Luis Bello"
-                    elif select =="2":
-                        select = "Jose Quevedo"
-                    elif select =="3":
-                        select= "Antonio Guerra"
-
                 db[key1_infraction] =name
                 db[key2_infraction] =last_name
                 db[key3_infraction] =id
                 db[key4_infraction] =type_infraction
-
                 for infractions in range(len(infraction)):
                     count_infractions +=1
                     key_infractions = count_infractions+1
                 infraction[key_infractions]=db
-                print(f"Officer {select} report the infraction {key_infractions}: {db}")
-        
+                print(f"\n Infraction {key_infractions}:")
+                for key_ifr_for, value_infra_for in db.items():
+                     print(f"\n---->{key_ifr_for}:{value_infra_for}")
+                print("OFFICERS' LIST:")
+                for keys, officers_for in officers.items():
+                    print(f"Officer {keys}:")
+                    for keys_values, values_officers in officers_for.items():
+                        print(f"\n-->{keys_values}: {values_officers}")
+                select = input("Select the officer: ")
+                if select.isalpha():
+                    print("Not valid")
+                if select.isnumeric():
+                    select = int(select)
+                    if select == "1":
+                        select = "Luis Bello"
+                        print(f"The infraction was registered by {select}")
+                    elif select =="2":
+                        select = "Jose Quevedo"
+                        print(f"The infraction was registered by {select}")
+                    elif select =="3":
+                        select= "Antonio Guerra"
+                        print(f"The infraction was registered by {select}")
+            
+
                 exit =input("Do you want to enter another infraction? (Enter 1 or 2) \n1- Yes \n2- No \n->")
                 if exit == "1":
                     continue
@@ -66,7 +77,10 @@ while True:
         
         elif menu == "3":
             for keys, values in infraction.items():
-                    print(f"Infraction {keys}: {values}")
+                print(f"\n Infraction {keys}:")
+                for keys2_2, values2_2 in values.items():
+                     print(f"\n- {keys2_2}:{values2_2}")
+    
             while True:
                 validate_erase = True
                 erase = list(infraction.keys())
@@ -87,8 +101,10 @@ while True:
                     print("Not valid")  
         elif menu == "2":
             for keys, values in infraction.items():
-                print(f"Infraction {keys}: {values}")
-            menu1 = input("Enter 'Menu' to go back to de Menu \n-")
+                print(f"\n Infraction {keys}:")
+                for keys2_2, values2_2 in values.items():
+                     print(f"\n-{keys2_2}:{values2_2}")
+            menu1 = input("Enter 'Menu' to go back to de Menu \n----->")
             menu1 = menu1.title()
             if menu1 == "Menu":
                 continue
