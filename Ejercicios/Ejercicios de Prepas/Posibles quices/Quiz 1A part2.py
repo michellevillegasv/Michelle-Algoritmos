@@ -11,10 +11,9 @@ while True:
         for digits in number: 
             digits=int(digits)
             suma+=digits
-            for j in range(digits):
-                if suma**(1/2) == j:
-                    cuadrado=True
-                    break
+            if suma**(1/2) == int((suma)**(1/2)):
+                cuadrado=True
+                break
         if number2==number:
             repunit = True
             break

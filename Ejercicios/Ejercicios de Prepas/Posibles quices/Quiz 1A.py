@@ -34,6 +34,8 @@ while True:
                 name = input("REGISTER THE INFRACTION \n- Enter the infractor's name:")
                 last_name = input("- Enter the infractor's last name: ")
                 id = input("- Enter the infractor's ID: ")
+                for num_infraction, type_infraction in infraction.items():
+                    print(f"{num_infraction}. {type_infraction['name']}")     
                 type_infraction = input("-Enter the type of the infraction: ")
                 db[key1_infraction] =name
                 db[key2_infraction] =last_name

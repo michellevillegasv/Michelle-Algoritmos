@@ -30,11 +30,11 @@ pathologies = {
         "price": 900}
     ],   
 }
+id_pathologie_dicc = {}
 new_patient = {}
-key1_patient = "name"
+key1_patient = "Name"
 key2_patient = "last name"
 key3_patient = "ID"
-key4_patient = "pathologie's ID"
 count=0
 while True:
     menu= input("CHOOSE YOUR OPTION (Enter 1, 2 or 3): \n-1 Register a pacient \n-2 Search a pacient \n-3 Exit \n->")
@@ -44,19 +44,26 @@ while True:
         menu=int(menu)
         if menu == 1:
             while True:
-                name = input("REGISTER THE PATIENT \n- Enter the patient's name:")
+                name = input("REGISTER THE PATIENT \n- Enter the patient's name: ")
                 last_name = input("- Enter the patient's last name: ")
                 id_patient = input("- Enter the patient's ID: ")
                 id_pathologie = input("-Enter the id of the pathologie: ")
                 new_patient[key1_patient] =name
                 new_patient[key2_patient] =last_name
                 new_patient[key3_patient] =id_pathologie
-                new_patient[key4_patient] =id_pathologie
+                #new_patient[key4_patient] =id_pathologie
 
-                
-                for keys1, values1 in new_patient.items():
-                    print(f"\n -        {keys1}: {values1}")    
-                exit =input("Do you want to enter another infraction? (Enter 1 or 2) \n1- Yes \n2- No \n->")
+                for type_system, systems_pathologies in pathologies.items():
+                    for types in systems_pathologies:
+                            id_pathologie = int(id_pathologie)
+                            if types["id"] == id_pathologie: 
+                                print("***** INVOICE *****")
+                                for patient_data, value_patient in new_patient.items():
+                                    print(f"\t{patient_data}: {value_patient}")
+                                print(f"\tPatient's pathologie: {types['name']}")
+                                print(f"\tMONTO A PAGAR: {types['price']}")
+
+                exit =input("Do you want to register another patient? (Enter 1 or 2) \n1- Yes \n2- No \n->")
                 if exit == "1":
                     continue
                 elif exit == "2":
@@ -64,15 +71,18 @@ while True:
                 else:
                     print("Not valid")
 
-            
 
-            print()
         elif menu == 2:
-            for keys1, values1 in pathologies.items():
-                print(f"\n- {keys1.upper()}:")
-                for list in values1:
-                    for keys2, values2 in list.items():
-                        print(f"\n -        {keys2}: {values2}")
             pathologie_search = input("Enter the pathologie you're searching for: ")
+            pathologie_search = pathologie_search.lower()
+            pathologie_search = pathologie_search.capitalize()
+            for type_system, systems_pathologies in pathologies.items():
+                if type_system == pathologie_search:
+                    print(f"{pathologie_search}: ")
+                    for patients in systems_pathologies:
+                        for data, value_data_patiens in patients.items():
+                            print(f"\t {data}: {value_data_patiens} ")
+                else:
+                    print("Pathologie not found")
         elif menu == 3: 
             break
