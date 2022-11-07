@@ -19,17 +19,17 @@ def perfect_numbers(suma,num):
         return perfect
     if suma==1:
         return perfect
-def ambicioso(num, max=10):
-    if perfect_numbers(suma(num),num) == True:
-        print("Es ambicioso")
-    while max!=0 and num!=1:
-        if perfect_numbers(suma(num),num) == False:
-            num = suma(num)
-            max-=1
-            if max==0:
-                print("No es ambicioso")
-        break
-
+def ambicioso(num):
+    ambicioso_verificador = False
+    while suma(num) !=num:
+        num= suma(num)
+        if perfect_numbers(suma(num),num) == True:
+            ambicioso_verificador=True
+            break
+    if ambicioso_verificador== True:
+        print(f"The number is an aspiring number")
+    else:
+        print("The number is not an aspiring number")
 ambicioso(num)
 
 
