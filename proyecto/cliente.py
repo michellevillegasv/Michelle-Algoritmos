@@ -7,7 +7,3 @@ class Client:
         self.type_tickets=type_ticket
         self.vampiro_id= vampiro_id
         self.perfect_id=perfect_id
-    def confirmation_client(self):
-        print("---TICKET---")
-        print(f"\nSeat: {self.seat}\nMatch {self.match}\n Ticket: {self.type_tickets}\nSubtotal: {self.total}\nDiscount:{self.discount} \nIVA: 16%\nTotal: {self.total-{self.total*self.discount}+{self.total*0.16}}")
-        
