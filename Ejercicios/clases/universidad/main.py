@@ -18,17 +18,14 @@ def person_register(professor_list,student_list):
             status = "Professor"
             id= input("ID: ")
             while id.isalpha(): input("ENTER A VALID OPTION\nID: ")
-            sections_professor=[]
-            sections=input("Sections: ")
-            sections_professor.append(sections.split("," or " "))
-            while sections.isalpha():
-                sections=input("ENTER THE CORRECT SECTIONS: ")
-            professor = Professor(status,name,last_name,sections_professor,id)
+            sections= random(10)
+            while sections.isalpha():input("ENTER THE CORRECT SECTIONS: ")
+            professor = Professor(status,name,last_name,sections,id)
         elif int(status)==2:
             status = "Student"
             carnet = input("Carnet: ")
             while carnet.isalpha(): input("ENTER A VALID OPTION\nCarnet: ")
-            sections = input("Sections: ")
+            sections = random(10)
             while sections.isalpha(): input("ENTER THE CORRECT SECTIONS: ")
             preparador = False 
             status_prepa = input("Are you a preparador? \n1.Yes\n2.No\n-> ")
@@ -47,12 +44,30 @@ def person_register(professor_list,student_list):
         elif int(confirm)==2:
             print("---INFORMATION DELETED---")
         
-def clases_prepas_select(profesor_list, student_list, asignature_list):
-    code = random(range(1,201))
-    return code
-
+def clases_prepas_select(profesor_list, student_list, asignature_list, prepa_list,class_list):
+    for lists in asignature_list:
+        selected_asignature= random(lists["Asignature"])
+    for lists in asignature_list:
+        if selected_asignature==lists["Asignature"]:
+            code_asignature = lists["Asignature Code"]
+    for students in student_list:
+        if students.preparador == True: student_selected=random(student_list)
+    professor_selected = random(profesor_list)
+    code_classroom = random(205)
+    schedule=input("Enter the schedule class:")
+    date_selected = random("lunes","martes","miercoles","jueves","viernes")
+    prepas_section = random(10)
+    for professors in profesor_list: section_selected= professors.sections
+    prepa_list.append(Prepa(selected_asignature,code_asignature,code_classroom,schedule,date_selected,prepas_section,student_selected))
+    class_list.append(Clase(selected_asignature,code_asignature,code_classroom,schedule,date_selected,section_selected,professor_selected))
+def class_show(class_list):
+    for classes in class_list:
+        classes.show()
+def prepas_show(prepas_list):
+    for prepas in prepas_list:
+        prepas.show()
 def person_show(student_list,professor_list):
-    menu= input("\n1.Students Database \n2.Prfoessors Database \n->")
+    menu= input("\n1.Students Database \n2.Professors Database \n->")
     while menu.isalpha(): input("\n1.Students Database \n2.Professors Database \n->")
     if int(menu)==1:
         for students in student_list:
@@ -68,10 +83,9 @@ def main():
         if int(menu)==1:
             person_register(professors_list,students_list)
         elif int(menu)==2:
-            #clases_prepas_select(professors_list)
-            pass
+            class_show(clases_list)
         elif int(menu)==3:
-            pass
+            prepas_show(prepas_list)
         elif int(menu)==4:
             person_show(students_list,professors_list)
         elif int(menu)==5 :
