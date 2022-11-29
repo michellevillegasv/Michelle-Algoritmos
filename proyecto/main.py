@@ -98,6 +98,7 @@ def show_date(match_obj):
     for date in new_list_matches:
         print(f"{date.id}. {date.date}")
 def register_client(matches_obj,client_obj):
+    print("---------------------------------------------\n\tREGISTER CLIENT\n---------------------------------------------")
     name=input("Client's name: ")
     id=input("Client's ID: ")
     while id.isalpha(): id=input("ENTER A VALID OPTION\nClient's ID: ")
@@ -153,15 +154,15 @@ def boleto(info_client, fila_get, columna_get,client_list, boleto_register):
         discount = 0
         discount_print="NO DISCOUNT"
     total = subtotal - discount + (subtotal*0.16)
-    boleto = Ticket(info_client[0],info_client[1], cont_client,fila_get,columna_get,subtotal,discount_print,total) 
-    print(boleto.confirmation_show())
-    decision = input("CONFIRM PURCHASE\n1.Confirm\n2.Delete\n->")
-    while decision.isalpha(): input("ENTER A VALID OPTION\n1.Confirm\n2.Delete\n->")
+    boleto = Ticket(info_client[0],info_client[1],info_client[3], cont_client,fila_get,columna_get,subtotal,discount_print,total) 
+    print(f"\n{boleto.confirmation_show()}")
+    decision = input("\n----------------\nCONFIRM PURCHASE\n1.Confirm\n2.Delete\n->")
+    while decision.isalpha(): decision =input("ENTER A VALID OPTION\n1.Confirm\n2.Delete\n->")
     if int(decision)==1:
         boleto_register.append(boleto)
         print("----TICKET BOUGTH----")
     elif int(decision)==2: print("---PURCHASE DELETE---")
-
+    elif int(decision)!=1 or int(decision)!=2: decision =input("ENTER A VALID OPTION\n1.Confirm\n2.Delete\n->")
 def boleto_check(boleto_register):
     code_list=[]
     for boletos in boleto_register:
@@ -208,13 +209,15 @@ def restaurant_show(dic_restaurant):
                         #else: continue
     elif int(menu_restaurant)==2:
         type_food= input("Enter the type of food you want to search:").title()
-        while type_food.isnumeric(): input("ENTER A VALID OPTION\nEnter the type of food you want to search:").title()
+        while not type_food.isalpha(): input("ENTER A VALID OPTION\nEnter the type of food you want to search:").title()
         for key,restaurants in dic_restaurant.items():
                 if select_restaurant == key.title():
                     for restaurant in restaurants:
                         for products in restaurant.products:
                             if type_food==(products.type).title():
                                 print(f"{products.show()}")
+        if type_food!=(products.type).title():
+            print("Type not found")
     elif int(menu_restaurant)==3:
         price_search=input("Enter the price you want to look: ")
         while price_search.isalpha(): input("ENTER A VALID OPTION\nEnter the price you want to look: ")
@@ -226,6 +229,24 @@ def restaurant_show(dic_restaurant):
                                 print(f"{products.show()}")
     else:
         print("Restaurant not found")
+def valid_stadium(fila,columna,client_info,matches_obj, stadium_obj):
+    for matches in matches_obj:
+        if client_info[3] == int(matches.id):
+            selected = int(matches.stadium_id)
+            break
+
+    for stadiums in stadium_obj:
+        if selected==int(stadiums.id):
+            if fila == stadiums.capacity[1] and columna==stadiums.capacity[0]:
+                if fila!=stadiums.capacity[1] and fila!=False:
+                    fila =input("Enter the number of the row: ")
+                    columna = input("Enter the number of the column: ")
+                if columna!=stadiums.capacity[0] and columna!=False:
+                    fila =input("Enter the number of the row: ")
+                    columna = input("Enter the number of the column: ")
+                break
+            return fila,columna
+            
 def stadium_view(stadium_map):
     order = "    "
     for numbers,seats in enumerate(stadium_map[1]):
@@ -274,15 +295,15 @@ def restaurant_management(client_list, match_obj, stadium_obj, invoice_dic, bole
                                                                             print(products.show_menu()) 
                                                                     elif int(client.age)>=18: 
                                                                         print(products.show_menu())
-                prices_list=[]                                                                                     
+                prices_list=[] 
+                compra={}                                                                                    
                 while True:
-                    compra={}
                     select_products=input("Select the product: ").title()
                     amount= input("How many of this product you want?: ")
                     while select_products.isnumeric(): input("ENTER A VALID OPTION\nSelect the product: ")
                     compra[amount]=select_products
                     menu=input("\n1.Select another product \n2.Finalize shop \n->")
-                    while menu.isalpha(): ("ENTER A VALID OPTION\n1.Select another product \n2.Finalize shop \n->")
+                    while not menu.isnumeric(): ("ENTER A VALID OPTION\n1.Select another product \n2.Finalize shop \n->")
                     if int(menu)==2:break
                     elif int(menu)==1: continue
                 for client in client_list:
@@ -300,7 +321,7 @@ def restaurant_management(client_list, match_obj, stadium_obj, invoice_dic, bole
                                                                     for amount,product_bought in compra.items():
                                                                         if (product.name).title()==product_bought:
                                                                             prices_list.append((float(product.price)*float(amount))+(float(product.price)*0.16))
-                print("---INVOICE---")
+                print("-----------INVOICE-----------")
                 for amount,products_shop in compra.items(): 
                     products_bought=products_shop
                     print(f"-{products_shop}")
@@ -347,7 +368,20 @@ def restaurant_management(client_list, match_obj, stadium_obj, invoice_dic, bole
                 elif int(confirm)==2: print("----SHOP CANCELED----")
             elif client.type_tickets=="General": print("---NOT ALLOWED TO BUY IN THE RESTAURANT---")
     if int(id_validation)!=int(client.id): print("-----CLIENT NOT FOUND-----")
-def statistics():
+def cont_asistencia(boleto_list,match_list):
+    cont_match=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+    for boletos in boleto:
+        for matches in match_list:
+            if int(boletos.match)==int(matches.id):
+                cont_match[int(matches.id)-1]+=1
+
+
+def statistics(spent_list):
+    spent_sum=[]
+    for id,spent in spent_list.items():
+        spent_sum.append(spent)
+    average_spent=sum(spent_sum)/len(spent_list)
+    print(f"AVERAGE SPENT CLIENT VIP: {average_spent}")
     pass
 def main():
     get_info_api()
@@ -356,7 +390,7 @@ def main():
     restaurant_register(get_info_api(),product_register(get_info_api()))
     stadium_register(stadium_obj,restaurant_register(get_info_api(),product_register(get_info_api())),get_info_api())
     matches_register(matches_obj,teams_obj,stadium_obj,get_info_api())
-    print("---WELCOME---")
+    print("---------------WELCOME---------------")
     while True: 
         menu = input("\n1. Matches\n2. Tickets\n3. Check Tickets\n4. Restaurants\n5. Statistics\n6. Exit \n->")
         while menu.isalpha(): input("CHOOSE A VALID OPTION\n1. Matches\n2. Tickets\n3. Check Tickets\n4. Restaurants\n5. Statistics\n6. Exit \n->")
@@ -396,7 +430,8 @@ def main():
             columna_get = input("Enter the number of the column: ")
             while fila_get.isalpha(): fila_get = input("Enter the number of the row:") 
             while columna_get.isalpha(): columna_get = input("Enter the number of the column: ")
-            selected_stadium[int(fila_get)-1][int(columna_get)-1]=True
+            x,y = valid_stadium(fila_get,columna_get,register_client_get,matches_obj, stadium_obj)
+            selected_stadium[int(x)-1][int(y)-1]=True
             stadium_view(selected_stadium)
             boleto(register_client_get,fila_get,columna_get,client_obj,boleto_register)
         elif int(menu)==3:
