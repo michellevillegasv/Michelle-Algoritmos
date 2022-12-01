@@ -16,7 +16,7 @@ stadium_obj=[]
 client_obj=[]
 boleto_register = []
 spent_vip_client={}
-product_count={}
+
 def get_info_api(): #En esta función importé todas las API, y returne la información en una tupla.
     url_team = "https://raw.githubusercontent.com/Algoritmos-y-Programacion-2223-1/api-proyecto/main/teams.json"
     response_team = requests.get(url_team)
@@ -111,7 +111,22 @@ def register_client(matches_obj,client_obj):
     if id is id.isnumeric(): int(id) 
     for client in client_obj:
         if int(client.id)==int(id) and len(client_obj)>0:
-            return client.name,client.id,client.age,client.match_client,client.ticket_selected,client.vampiro_id,client.perfect_id
+            age=client.age
+            vampiro=client.vampiro_id
+            perfect_id=client.perfect_id
+            for matches in new_list_matches:
+                print(f"-----{matches.id}-----")
+                print(f"\n\t{matches.show()}")
+        select_match=input("Select the match: ")
+        while select_match.isalpha(): input("ENTER A VALID OPTION\nSelect the match: ")
+        for matches in new_list_matches:
+            if int(select_match)==matches.id: match_client=matches.id
+        ticket=input("\n1. General --> 50$\n2. VIP -->120$\n->")
+        while ticket.isalpha(): ("ENTER A VALID OPTION\n1. General --> 50$\n2. VIP -->120$\n->")
+        if int(ticket)==1: ticket_selected="General"
+        elif int(ticket)==2: ticket_selected="VIP"
+        else: input("ENTER A VALID OPTION\n1. General --> 50$\n2. VIP -->120$\n->")
+        return name,id,age,match_client,ticket_selected,vampiro_id,perfect_id
     else:
         age=input("Client's age: ")
         while age.isalpha() and age<0 and age>118: input("ENTER A VALID OPTION\nClient's age: ")
@@ -255,9 +270,10 @@ def valid_stadium(fila,columna,client_info,matches_obj, stadium_obj):
     for stadiums in stadium_obj:
         if selected==int(stadiums.id):
             if int(fila) in range(stadiums.capacity[1]) and int(columna) in range(stadiums.capacity[0]):
+                break
+            else:
                 fila =input("Enter the number of the row: ")
                 columna = input("Enter the number of the column: ")
-                break
     return fila,columna
             
 def stadium_view(stadium_map):
@@ -275,7 +291,7 @@ def stadium_view(stadium_map):
             else: indicador+="|    "
         print("   "+"_"*len(stadium_map[1]*5))
         print(indicador)
-def restaurant_management(client_list, match_obj, stadium_obj, invoice_dic, boleto_list,product_count):
+def restaurant_management(client_list, match_obj, stadium_obj, invoice_dic, boleto_list):
     id_validation= input("Enter the client's ID: ")
     while id_validation.isalpha(): id_validation=input("ENTER A VALID OPTION\nEnter the client's ID: ")
     for client in client_list:
@@ -301,95 +317,91 @@ def restaurant_management(client_list, match_obj, stadium_obj, invoice_dic, bole
                                             for name,value in (stadium.restaurants).items():
                                                     if name==stadium.name:
                                                         for restaurant in value:
-                                                            if select_restaurant == (restaurant.name).title():
-                                                                for products in restaurant.products:
-                                                                    if int(client.age)<18:
-                                                                        if products.type=="beverages":
-                                                                            if products.alcoholic=="alcoholic":
-                                                                                (restaurant.products).remove(products)
-                                                                        print(products.show_menu()) 
-                                                                    elif int(client.age)>=18: 
-                                                                        print(products.show_menu())
-                prices_list=[] 
-                compra={}                                                                                    
-                while True:
-                    select_products=input("Select the product: ").title()
-                    amount= input("How many of this product you want?: ")
-                    while select_products.isnumeric(): input("ENTER A VALID OPTION\nSelect the product: ")
-                    repeat_product=False
-                    for key,value in compra.items(): 
-                        if select_products==key.title():
-                            compra[select_products]+=amount
-                            repeat_product=True
-                            break
-                    if repeat_product:    
-                        compra[select_products]=amount
-                    menu=input("\n1.Select another product \n2.Finalize shop \n->")
-                    while not menu.isnumeric(): ("ENTER A VALID OPTION\n1.Select another product \n2.Finalize shop \n->")
-                    if int(menu)==2:break
-                    elif int(menu)==1: continue
-                for client in client_list:
-                    if id_validation==client.id:
-                        if client.type_tickets== "VIP":
-                            for match in match_obj:
-                                if client.match == match.id:
-                                    for stadium in stadium_obj:
-                                        if match.stadium==stadium.name:
-                                            for name,value in (stadium.restaurants).items():
-                                                    if name==stadium.name:
-                                                        for restaurant in value:
-                                                            if select_restaurant == restaurant.name:
-                                                                for product in restaurant.products:
-                                                                    for product_bought,amount in compra.items():
-                                                                        if (product.name).title()==product_bought:
-                                                                            prices_list.append((float(product.price)*float(amount))+(float(product.price)*0.16))
-                print("-----------INVOICE-----------")
-                product_shop=[]
-                for products_confirmed,amount in compra.items(): 
-                    product_shop.append(products_confirmed)
-                    print(f"-{products_confirmed}")
-                for client in client_list: 
-                    if client.id ==id_validation:
-                        name_invoice_client = client.name
-                        if client.perfect_id == True: 
-                            discount = sum(prices_list)*0.15
-                            print_discount ="DISCOUNT: 15%" 
-                        else:
-                            discount = 0
-                            print_discount="NO DISCOUNT"   
-                print(f"TOTAL: {sum(prices_list)-discount}")
-                confirm = input("\n1.Confirm your shop\n2.Cancel your shop\n->")
-                while confirm.isalpha(): confirm= ("ENTER A VALID OPTION\n1.Confirm your shop\n2.Cancel your shop\n->")
-                if int(confirm)==1:
-                    #for products_registered,amount_inicial in compra.items(): 
-                    invoice_get = Invoice(name_invoice_client,id_validation,product_shop,print_discount,sum(prices_list),(sum(prices_list)-discount))
-                    print("----SHOP CONFIRMED!----")
-                    print(invoice_get.show())
-                    for client in client_list:
-                        if id_validation==client.id:
-                            if client.type_tickets== "VIP":
-                                for match in match_obj:
-                                    if client.match == match.id:
-                                        for stadium in stadium_obj:
-                                            if match.stadium==stadium.name:
-                                                for name,value in (stadium.restaurants).items():
-                                                        if name==stadium.name:
-                                                            for restaurant in value:
-                                                                if select_restaurant == restaurant.name:
-                                                                    for product in restaurant.products:
-                                                                        for amount,product_bought in compra.items():
-                                                                            if (product.name).title()==product_bought:
-                                                                                product.quantity= int(product.quantity)-int(amount)
-                    list_spent=[]
-                    list_spent.append(((sum(prices_list)-discount)))
-                    for client in client_list:
-                        if id_validation==client.id:
-                            if client.type_tickets== "VIP":
-                                for boleto in boleto_list:
-                                    if int(boleto.id_client)==int(client.id):
-                                        list_spent.append(boleto.total)
-                    invoice_dic[client.id]=list_spent                                                            
-                elif int(confirm)==2: print("----SHOP CANCELED----")
+                                                            try:
+                                                                if select_restaurant == (restaurant.name).title():
+                                                                    for products in restaurant.products:
+                                                                        if int(client.age)<18:
+                                                                            if products.type=="beverages":
+                                                                                if products.alcoholic=="alcoholic":
+                                                                                    (restaurant.products).remove(products)
+                                                                            print(products.show_menu()) 
+                                                                        elif int(client.age)>=18: 
+                                                                            print(products.show_menu())
+                                                                prices_list=[] 
+                                                                compra={}                                                                                    
+                                                                while True:
+                                                                    select_products=input("Select the product: ").title()
+                                                                    amount= input("How many of this product you want?: ")
+                                                                    while not select_products.isalpha(): input("ENTER A VALID OPTION\nSelect the product: ")
+                                                                    compra[select_products]=amount
+                                                                    menu=input("\n1.Select another product \n2.Finalize shop \n->")
+                                                                    while not menu.isnumeric(): ("ENTER A VALID OPTION\n1.Select another product \n2.Finalize shop \n->")
+                                                                    if int(menu)==2:break
+                                                                    elif int(menu)==1: continue
+                                                                for client in client_list:
+                                                                    if id_validation==client.id:
+                                                                        if client.type_tickets== "VIP":
+                                                                            for match in match_obj:
+                                                                                if client.match == match.id:
+                                                                                    for stadium in stadium_obj:
+                                                                                        if match.stadium==stadium.name:
+                                                                                            for name,value in (stadium.restaurants).items():
+                                                                                                if name==stadium.name:
+                                                                                                    for restaurant in value:
+                                                                                                        if select_restaurant == restaurant.name:
+                                                                                                            for product in restaurant.products:
+                                                                                                                for product_bought,amount in compra.items():
+                                                                                                                    if (product.name).title()==product_bought:
+                                                                                                                        prices_list.append((float(product.price)*float(amount))+(float(product.price)*0.16))
+                                                                                                                        break
+                                                                print("-----------INVOICE-----------")
+                                                                product_shop=[]
+                                                                for products_confirmed,amount in compra.items(): 
+                                                                    product_shop.append(products_confirmed)
+                                                                    print(f"-{products_confirmed}")
+                                                                for client in client_list: 
+                                                                    if client.id ==id_validation:
+                                                                        name_invoice_client = client.name
+                                                                        if client.perfect_id == True: 
+                                                                            discount = sum(prices_list)*0.15
+                                                                            print_discount ="DISCOUNT: 15%" 
+                                                                        else:
+                                                                            discount = 0
+                                                                            print_discount="NO DISCOUNT"   
+                                                                print(f"TOTAL: {sum(prices_list)-discount}")
+                                                                confirm = input("\n1.Confirm your shop\n2.Cancel your shop\n->")
+                                                                while confirm.isalpha(): confirm= ("ENTER A VALID OPTION\n1.Confirm your shop\n2.Cancel your shop\n->")
+                                                                if int(confirm)==1: 
+                                                                    invoice_get = Invoice(name_invoice_client,id_validation,product_shop,print_discount,sum(prices_list),(sum(prices_list)-discount))
+                                                                    print("----SHOP CONFIRMED!----")
+                                                                    print(invoice_get.show())
+                                                                    for client in client_list:
+                                                                        if id_validation==client.id:
+                                                                            if client.type_tickets== "VIP":
+                                                                                for match in match_obj:
+                                                                                    if client.match == match.id:
+                                                                                        for stadium in stadium_obj:
+                                                                                            if match.stadium==stadium.name:
+                                                                                                for name,value in (stadium.restaurants).items():
+                                                                                                        if name==stadium.name:
+                                                                                                            for restaurant in value:
+                                                                                                                if select_restaurant == restaurant.name:
+                                                                                                                    for product in restaurant.products:
+                                                                                                                        for amount,product_bought in compra.items():
+                                                                                                                            if (product.name).title()==product_bought:
+                                                                                                                                product.quantity= int(product.quantity)-int(amount)
+                                                                    list_spent=[]
+                                                                    list_spent.append(((sum(prices_list)-discount)))
+                                                                    for client in client_list:
+                                                                        if id_validation==client.id:
+                                                                            if client.type_tickets== "VIP":
+                                                                                for boleto in boleto_list:
+                                                                                    if int(boleto.id_client)==int(client.id):
+                                                                                        list_spent.append(boleto.total)
+                                                                    invoice_dic[client.id]=list_spent                                                            
+                                                                elif int(confirm)==2: print("----SHOP CANCELED----")
+                                                            except:
+                                                                print("----NOT FOUND----")                   
             elif client.type_tickets=="General": print("---NOT ALLOWED TO BUY IN THE RESTAURANT---")
 def statistics(spent_list,matches_obj,boletos_list,client_list):
     print("\n-----STATISTICS-----")
@@ -423,42 +435,35 @@ def statistics(spent_list,matches_obj,boletos_list,client_list):
         None
     else:
         print(f"TOP 3 CLIENTS:\n1.{(new_list_client_order[0]).name}\n2.{(new_list_client_order[1]).name}\n3.{(new_list_client_order[2]).name}")
-def main(teams_obj,matches_obj,stadium_obj,client_obj,boleto_register,spent_vip_client,product_count):
+def main(teams_obj,matches_obj,stadium_obj,client_obj,boleto_register,spent_vip_client):
     try:
         with open("teams_obj.txt", "rb") as archivo:
-            teams_obj=pickle.load(archivo)
+            teams_obj=pickle.loads(archivo)
     except:
          get_info_api()
     try:
         with open("matches_obj.txt", "rb") as archivo:
-            matches_obj=pickle.load(archivo)
+            matches_obj=pickle.loads(archivo)
     except:
          get_info_api()
     try:
         with open("stadium_obj.txt","rb") as archivo:
-            stadium_obj=pickle.load(archivo)
+            stadium_obj=pickle.loads(archivo)
     except:
         get_info_api()
     try:
         with open("client_obj.txt","rb") as archivo:
-            client_obj=pickle.load(archivo)
+            client_obj=pickle.loads(archivo)
     except:
         get_info_api()
     try:
         with open("boleto_register.txt", "rb") as archivo:
-            boleto_register=pickle.load(archivo)
+            boleto_register=pickle.loads(archivo)
     except:
         get_info_api()
     try:
-        with open("spent_vip_client.txt","r") as archivo:
-            archivo1=archivo.read()
-            spent_vip_client= eval(archivo1)
-    except:
-        get_info_api()
-    try:
-        with open("product_count.txt", "r") as archivo:
-            archivo1=archivo.read()
-            product_count=eval(archivo1)
+        with open("spent_vip_client.txt","rb") as archivo:
+            spent_vip_client= pickle.loads(archivo)
     except:
         get_info_api()
     
@@ -519,22 +524,20 @@ def main(teams_obj,matches_obj,stadium_obj,client_obj,boleto_register,spent_vip_
             if int(menu_4)==1:
                 restaurant_show(restaurant_register(get_info_api(),product_register(get_info_api())))
             elif int(menu_4)==2:
-                restaurant_management(client_obj,matches_obj,stadium_obj, spent_vip_client,boleto_register,product_count)
+                restaurant_management(client_obj,matches_obj,stadium_obj, spent_vip_client,boleto_register)
         elif int(menu)==5:
             statistics(spent_vip_client,matches_obj,boleto_register,client_obj)
         elif int(menu)==6: 
-            pickle.dump(teams_obj,open("teams_obj.txt","wb"))
-            pickle.dump(matches_obj, open("matches_obj.txt","wb"))
-            pickle.dump(stadium_obj, open("stadium_obj.txt","wb"))
-            pickle.dump(client_obj, open("client_obj.txt","wb"))
-            pickle.dump(boleto_register,open("boleto_register.txt","wb"))
-            with open("spent_vip_client.txt","wt") as archivo:
-                spent_vip_client=str(spent_vip_client)
-                archivo.write(spent_vip_client)
-            with open("product_count.txt", "wt") as archivo:
-                product_count=str(product_count)
-                archivo.write(product_count)
+            with open ("teams_obj.txt", "wb") as archivo:
+                archivo.write(pickle.dumps(teams_obj))
+            with open ("matches_obj.txt", "wb") as archivo:
+                archivo.write(pickle.dumps(matches_obj))
+            with open ("stadium_obj.txt", "wb") as archivo:
+                archivo.write(pickle.dumps(stadium_obj))
+            with open("spent_vip_client.txt","wb") as archivo:
+                archivo.write(pickle.dumps(spent_vip_client))
+            #
             break
-main(teams_obj,matches_obj,stadium_obj,client_obj,boleto_register,spent_vip_client,product_count)
+main(teams_obj,matches_obj,stadium_obj,client_obj,boleto_register,spent_vip_client)
 
 
